@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import numpy as np
 import os
 import tensorflow as tf
@@ -16,6 +17,7 @@ class_names = [
 ]
 
 app = Flask(__name__)
+CORS(app)
 
 model = tf.keras.models.load_model(MODEL_PATH)
 input_shape = (224, 224)
