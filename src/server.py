@@ -5,9 +5,6 @@ import os
 import tensorflow as tf
 import io
 
-
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, 'models', 'best_model.h5')
 TOP_N = 3
@@ -22,22 +19,11 @@ class_names = [
 app = Flask(__name__)
 CORS(app)
 
-
-model = None
+model = tf.keras.models.load_model(MODEL_PATH)
 input_shape = (224, 224)
-
-@app.before_first_request
-def load_model():
-    global model
-    if model is None:
-        model = tf.keras.models.load_model(MODEL_PATH)
 
 @app.route('/', methods=['POST'])
 def predict():
-    global model
-    if model is None:
-        model = tf.keras.models.load_model(MODEL_PATH)
-
     if 'image' not in request.files:
         return jsonify({'status': 'failed', 'error': 'No image provided'}), 400
     
@@ -79,8 +65,7 @@ def handle_invalid_usage(error):
         'error': 'Path or method not exist'
     }), 404
 
-
 if __name__ == '__main__':
-    # Gunakan port dari environment variable (misal untuk dev lokal)
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
