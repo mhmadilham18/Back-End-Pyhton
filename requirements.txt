@@ -6,5 +6,6 @@ pillow
 pandas
 gunicorn
 flask-cors
+gunicorn
 
 
